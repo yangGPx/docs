@@ -2,7 +2,7 @@
 看 做 练 写 忘
 多看几遍
 
-## let -> var
+## let -> var 
 code -> Ast -> code2
 1. 初始化模块
 ```
@@ -133,8 +133,6 @@ function collectCodeAndDeps(filePath) {
 } 
 
 function getProjectPath() {}
-
-
 ```
 ### 递归地分析嵌套依赖
 一层一层往下找依赖关系，可能存在call stack风险，因为依赖层级超过1w。
@@ -594,4 +592,57 @@ chunk 动态引入的模块用chunk单独一个文件，
 ### 总结
 
 主要还是手写一个简单的打包器 这一块流程 熟悉
+
+
+
+## Plugin
+
+1. webpack流程
+2. 插件：在某两个阶段中间插入进去,考虑在哪个阶段执行
+
+imagemin-webpack-plugin， clewab-webpack-plugin
+
+
+
+### imagemin-webpack-plugin
+
+1. 使用
+2. 源码，监听emit事件，对compilation.assets进行遍历，如果是图片的话，就对图片进行压缩
+
+
+
+### clean-webpack-plugin
+
+1. 使用
+2. emit，确定开始编译之前，清除之前的文件
+3. done，删除不需要的临时文件
+
+### providePlugin
+
+全局使用一个变量，不需要引入，直接用就好了，会自动在使用到变量的文件自动引入。
+
+在哪个阶段开始做呢？
+
+该 插件直接监听的是nmf
+
+compilation阶段，获取nmf,  parse之后, 在ast遍历的时候进行处理
+
+
+
+### Loader 和 plugin区别 ？
+
+loader主要是在make阶段
+
+plugin对webpack的每个阶段进行介入，丰富webpack的能力，基于事件机制工作，监听web                                      pack的 打包过程中每个阶段函数
+
+### 自己写webpack plugin
+
+官方文档 write plugin
+
+主要是按照官方文档格式，以及考虑需求，要监听什么阶段的事件？，以及要做什么？
+
+主要用到的知识：
+1. webpack hooks
+2. 编译原理的了解
+3. 对chunk 、hash、 module、 dep、 factory等的理解
 
